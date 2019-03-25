@@ -1,12 +1,5 @@
 def label = "worker-${UUID.randomUUID().toString()}"
 
-def getCurrentBranch () {
-    return sh (
-        script: 'git rev-parse --abbrev-ref HEAD',
-        returnStdout: true
-    ).trim()
-}
-
 podTemplate(label: label, cloud: 'kubernetes', 
     containers: [
         containerTemplate(name: 'certified', image: 'sunjingyun/node:10-certified', ttyEnabled: true, command: 'cat')
@@ -16,20 +9,14 @@ podTemplate(label: label, cloud: 'kubernetes',
     node(label) {
         
         def scmVars = checkout scm
-
-        echo "??? git commit is ${scmVars.GIT_COMMIT}"
-        echo "??? git commit is ${scmVars.BRANCH}"
-        echo "??? git commit is ${scmVars}"
-
-        def branch = getCurrentBranch()
-
-        echo "The branch name is ${branch}"
+        
+        def commit = scmVars.GIT_COMMIT
+        def branch = scmVars.GIT_BRANCH
 
         stage('Run Unit Test') {
                 script {
-                    sh "printenv"
-
-                    if (branch == "master") {
+                    // if (branch != "origin/master" && branch != "master") {
+                    if (branch == "origin/master" || branch == "master") {
                         echo 'Ready to run unit test'
 
                         container('certified') {
@@ -44,7 +31,7 @@ podTemplate(label: label, cloud: 'kubernetes',
         
         stage('Deploy Test Environment') {
                 script {
-                    if (branch == "master") {
+                    if (branch == "origin/master" || branch == "master") {
                         echo 'Ready to deploy environment'
                         stage ('Trigger the wt-devops job') {
                             build job: 'wt-generic-devops-job',
