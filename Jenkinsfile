@@ -11,7 +11,6 @@ podTemplate(label: label, cloud: 'kubernetes',
         checkout scm
 
         stage('Run Unit Test') {
-            steps {
                 script {
                     if (env.BRANCH_NAME != "master") {
                         echo 'Ready to run unit test'
@@ -24,11 +23,9 @@ podTemplate(label: label, cloud: 'kubernetes',
                         echo 'Skip the unit test'
                     }
                 }
-            }
         }
         
         stage('Deploy Test Environment') {
-            steps {
                 script {
                     if (env.BRANCH_NAME == "master") {
                         echo 'Ready to deploy environment'
@@ -46,7 +43,6 @@ podTemplate(label: label, cloud: 'kubernetes',
                         }
                     }
                 }
-            }
         }
     }
 }
