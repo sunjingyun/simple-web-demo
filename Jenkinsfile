@@ -12,6 +12,8 @@ podTemplate(label: label, cloud: 'kubernetes',
 
         stage('Run Unit Test') {
                 script {
+                    echo "The branch is ${env.BRANCH_NAME}"
+
                     if (env.BRANCH_NAME != "master") {
                         echo 'Ready to run unit test'
 
