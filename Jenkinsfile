@@ -15,9 +15,11 @@ podTemplate(label: label, cloud: 'kubernetes',
 ) {
     node(label) {
         
-        checkout scm
+        def scmVars = checkout scm
 
-        echo "??? Branch name is ${scm.branches[0].name}"
+        echo "??? git commit is ${scmVars.GIT_COMMIT}"
+        echo "??? git commit is ${scmVars.BRANCH}"
+        echo "??? git commit is ${scmVars}"
 
         def branch = getCurrentBranch()
 
