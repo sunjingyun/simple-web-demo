@@ -17,6 +17,8 @@ podTemplate(label: label, cloud: 'kubernetes',
         
         checkout scm
 
+        echo "??? Branch name is ${scm.branches[0].name}"
+
         def branch = getCurrentBranch()
 
         echo "The branch name is ${branch}"
