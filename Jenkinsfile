@@ -1,5 +1,12 @@
 def label = "worker-${UUID.randomUUID().toString()}"
 
+def getCurrentBranch () {
+    return sh (
+        script: 'git rev-parse --abbrev-ref HEAD',
+        returnStdout: true
+    ).trim()
+}
+
 podTemplate(label: label, cloud: 'kubernetes', 
     containers: [
         containerTemplate(name: 'certified', image: 'sunjingyun/node:10-certified', ttyEnabled: true, command: 'cat')
@@ -10,11 +17,15 @@ podTemplate(label: label, cloud: 'kubernetes',
         
         checkout scm
 
+        def branch = getCurrentBranch()
+
+        echo "The branch name is ${branch}"
+
         stage('Run Unit Test') {
                 script {
                     sh "printenv"
 
-                    if (env.BRANCH_NAME != "master") {
+                    if (branch == "master") {
                         echo 'Ready to run unit test'
 
                         container('certified') {
@@ -29,7 +40,7 @@ podTemplate(label: label, cloud: 'kubernetes',
         
         stage('Deploy Test Environment') {
                 script {
-                    if (env.BRANCH_NAME == "master") {
+                    if (branch == "master") {
                         echo 'Ready to deploy environment'
                         stage ('Trigger the wt-devops job') {
                             build job: 'wt-generic-devops-job',
