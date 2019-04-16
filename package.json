@@ -1,0 +1,23 @@
+{
+  "name": "simple-web-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/index.require-mocha",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sunjingyun/simple-web-demo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sunjingyun/simple-web-demo/issues"
+  },
+  "homepage": "https://github.com/sunjingyun/simple-web-demo#readme",
+  "dependencies": {
+    "mocha": "^6.1.3"
+  }
+}
