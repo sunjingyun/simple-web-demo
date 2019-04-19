@@ -18,11 +18,11 @@ const Mocha = require("mocha");
 })()
     .then(failures => {
         process.exitCode = 0;
-        // process.exitCode = failures;
+        process.exitCode = failures;
     })
     .catch(error => {
         console.log(error);
-        // process.exitCode = -1;
+        process.exitCode = -1;
     })
     .finally(() => {
         process.exit();
