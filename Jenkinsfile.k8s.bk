@@ -18,8 +18,8 @@ podTemplate(label: label, cloud: 'kubernetes',
 
                     container('mixed') {
                         sh "docker image ls"
-                        sh "kubectl get pod"
                         sh "helm ls"
+                        sh "kubectl get pod"
                     }
             }
         }
