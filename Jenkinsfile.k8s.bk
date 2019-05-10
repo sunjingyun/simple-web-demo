@@ -17,7 +17,7 @@ podTemplate(label: label, cloud: 'kubernetes',
                     echo 'Ready to run unit test'
 
                     container('mixed') {
-                        sh "docker image ls"
+                        sh "docker images"
                         sh "helm ls"
                         sh "kubectl get pod"
                     }
