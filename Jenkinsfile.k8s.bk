@@ -18,7 +18,7 @@ podTemplate(label: label, cloud: 'kubernetes',
 
                     container('wtctl') {
                         sh '''
-                            docker run --rm --network=host --volumes-from `docker ps | grep "$JENKINS_AGENT_NAME" | grep "wtctl" | cut -d " " -f 1` worktile/dind-helm-k8s:0.1 /bin/bash -c "docker images && helm ls && kubectl get pod"
+                            docker run --rm -v /etc/hosts:/etc/hosts --volumes-from `docker ps | grep "$JENKINS_AGENT_NAME" | grep "wtctl" | cut -d " " -f 1` worktile/dind-helm-k8s:0.1 /bin/bash -c "docker images && helm ls && kubectl get pod"
                         '''
                     }
             }
