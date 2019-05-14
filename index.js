@@ -1,5 +1,4 @@
 const http = require('http');
 http.createServer((req, res) => {
-    console.log(req.headers);
-    res.end('Hello, Hello, my friend: index\n');
+    res.end('Hello, Hello, my friend: sunjingyun\n');
 }).listen(8080);
