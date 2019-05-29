@@ -39,7 +39,9 @@ podTemplate(label: label, cloud: 'kubernetes',
         containerTemplate(name: 'wtctl', image: 'worktile/wtctl-beta:latest', ttyEnabled: true, command: 'cat')
     ],
     volumes: [
-        hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
+        hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+        hostPathVolume(mountPath: '/tmp/cache', hostPath: '/tmp/cache/wt-rd-pipeline'),
+        hostPathVolume(mountPath: '/root/.ssh', hostPath: '/root/.ssh')
     ]
 ) {
     node(label) {
@@ -51,16 +53,7 @@ podTemplate(label: label, cloud: 'kubernetes',
                     echo 'Ready to run deployment'
 
                     container('wtctl') {
-                        sh '''
-                            docker run --rm --env BUILD_URL="$BUILD_URL" --env BUILD_ID="$BUILD_ID" --env WT_PROJECT_NAME="simple-web-demo-copy" --env WT_DOCKER_USERNAME="sunjingyun" --env WT_LANGUAGE="1" --env WT_DOCKER_PASSWORD='PT1nQzVFRE15QWtiMWwzWnVsbWF1VjNVCg==' --env WT_DOCKER_REGISTRY="10.0.0.209" --env WT_BASE_PATH=`pwd` --volumes-from `docker ps | grep "$JENKINS_AGENT_NAME" | grep "wtctl" | cut -d " " -f 1`  worktile/wt-deployment:0.1
-
-                            if [ -f ".wt-cmd.sh" ]; then
-                                bash .wt-cmd.sh
-                            fi
-
-                            rm -rf .wt-cmd.sh
-                            rm -rf .wt-cmd-resource
-                        '''
+                        sh "wtctl all --test --token=36c78c66-31a7-4aae-b835-d32ecfa5a7b8"
                     }
             }
         }
