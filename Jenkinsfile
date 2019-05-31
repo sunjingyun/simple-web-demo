@@ -53,7 +53,7 @@ podTemplate(label: label, cloud: 'kubernetes',
                     echo 'Ready to run deployment'
 
                     container('wtctl') {
-                        sh "wtctl all --test --token=36c78c66-31a7-4aae-b835-d32ecfa5a7b8"
+                        sh "wtctl --test --token=36c78c66-31a7-4aae-b835-d32ecfa5a7b8"
                     }
             }
         }
