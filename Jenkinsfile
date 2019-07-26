@@ -2,7 +2,7 @@ def label = "worker-${UUID.randomUUID().toString()}"
 
 podTemplate(label: label, cloud: 'kubernetes',
     containers: [
-        containerTemplate(name: 'wtctl', image: 'worktile/wtctl:latest', ttyEnabled: true, command: 'cat')
+        containerTemplate(name: 'wtctl', image: 'worktile/wtctl:latest', alwaysPullImage: true, ttyEnabled: true, command: 'cat')
     ],
     volumes: [
         hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
