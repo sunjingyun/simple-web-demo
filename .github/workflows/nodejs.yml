@@ -28,11 +28,10 @@ jobs:
         npm install
     - name: Npm run test
       run: |
-        echo It is ${{ toJson(github) }}
         npm run build
         npm run test
     - name: Docker build and push
-      if: github.event == 'push'
+      if: github.github.event == 'push'
       run: |
         export DOCKER_IMAGE_TAG=$(echo $GITHUB_SHA | cut -c -8)
         export DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
@@ -43,7 +42,7 @@ jobs:
         DOCKER_IMAGE_NAME: sunjingyun/simple-web-demo
       
   deploy:
-    if: github.event == 'push'
+    if: github.github.event == 'push'
     needs: [build]
     runs-on: ubuntu-18.04
     strategy:
