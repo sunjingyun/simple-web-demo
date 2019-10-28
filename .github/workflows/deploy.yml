@@ -1,7 +1,7 @@
 name: Deploy to Production
 
 on:
-  deployment_status
+  release
 
 jobs:
   build:
