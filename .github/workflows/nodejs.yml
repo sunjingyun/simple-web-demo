@@ -1,4 +1,4 @@
-name: Node CI
+name: Node CI/CD
 
 on:
   push:
@@ -7,14 +7,12 @@ on:
 
 jobs:
   build:
-    name: integration 
+    name: CI/CD 
     runs-on: ubuntu-18.04
-
     strategy:
       matrix:
         node-version: [10]
         os: [ubuntu-18.04]
-
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
@@ -25,8 +23,12 @@ jobs:
       run: |
         npm install
         npm run test
-        printenv
       env:
-        CI: true
-    - name: docker build
-      run: docker build -f Dockerfile -t simple-web-demo:$(date +%s) .
+        NODE_ENV: development
+    - name: docker build && push
+      run: |
+        docker build -f Dockerfile -t $MY_IMAGE .
+        docker login -u ${{ secrets.DOCKER_ACCOUNT }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker push $MY_IMAGE
+      env: 
+        MY_IMAGE: sunjingyun/simple-web-demo:$(echo $GITHUB_SHA | cut -c -8)
