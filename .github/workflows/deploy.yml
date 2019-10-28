@@ -1,11 +1,11 @@
 name: Deploy to Production
 
 on:
-  release
+  release:
+    types: [published]
 
 jobs:
   build:
-    needs: []
     runs-on: ubuntu-18.04
     strategy:
       matrix:
