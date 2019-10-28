@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "echo Done!",
     "test": "node test/index.require-mocha",
     "start": "node server.js"
   },
