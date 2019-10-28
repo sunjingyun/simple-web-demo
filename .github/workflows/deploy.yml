@@ -1,0 +1,21 @@
+name: Deploy to Production
+
+on:
+  deployment:
+
+jobs:
+  build:
+    needs: []
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        os: [ubuntu-18.04]
+    steps:
+    - name: Deploy to production environment
+      if: github.event_name == 'push'
+      run: |
+        export DOCKER_IMAGE_TAG=$(echo $GITHUB_SHA | cut -c -8)
+        export DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+        echo $DOCKER_IMAGE_NAME is deployed
+      env: 
+        DOCKER_IMAGE_NAME: sunjingyun/simple-web-demo
