@@ -7,7 +7,6 @@ on:
   push:
     branches:
     - master
-  
 
 jobs:
   build:
@@ -27,9 +26,7 @@ jobs:
     - name: Install node_modules
       run:
         npm install
-        echo Is is $WHAT
-      env:
-        WHAT: ${{ github.event }}
+        echo It is ${{ github.event }}
     - name: Npm run test
       run: |
         npm run build
