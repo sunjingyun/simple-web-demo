@@ -19,16 +19,18 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install && test
+    - name: Npm init && test
       run: |
         npm install
         npm run test
       env:
         NODE_ENV: development
-    - name: docker build && push
+    - name: Docker build && push
       run: |
-        docker build -f Dockerfile -t $MY_IMAGE .
+        export DOCKER_IMAGE_TAG=$(echo $GITHUB_SHA | cut -c -8)
+        export DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+        docker build -f Dockerfile -t $DOCKER_IMAGE_NAME .
         docker login -u ${{ secrets.DOCKER_ACCOUNT }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker push $MY_IMAGE
+        docker push $DOCKER_IMAGE_NAME
       env: 
-        MY_IMAGE: sunjingyun/simple-web-demo:$(echo $GITHUB_SHA | cut -c -8)
+        DOCKER_IMAGE_NAME: sunjingyun/simple-web-demo
