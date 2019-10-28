@@ -28,7 +28,7 @@ jobs:
         npm install
     - name: Npm run test
       run: |
-        echo It is ${{ github.event }}
+        echo It is ${{ toJson(github.event) }}
         npm run build
         npm run test
     - name: Docker build and push
