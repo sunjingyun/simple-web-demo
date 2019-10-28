@@ -1,13 +1,17 @@
 name: Node CI/CD
 
 on:
+  pull_request:
+    branches: 
+    - master
   push:
     branches:
     - master
+  
 
 jobs:
   build:
-    name: CI/CD 
+    needs: []
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -19,18 +23,37 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Npm init && test
-      run: |
+        
+    - name: Install node_modules
+      run:
         npm install
+    - name: Npm run test
+      run: |
+        npm run build
         npm run test
-      env:
-        NODE_ENV: development
-    - name: Docker build && push
+    - name: Docker build and push
+      if: github.event == 'push'
       run: |
         export DOCKER_IMAGE_TAG=$(echo $GITHUB_SHA | cut -c -8)
         export DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
         docker build -f Dockerfile -t $DOCKER_IMAGE_NAME .
         docker login -u ${{ secrets.DOCKER_ACCOUNT }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker push $DOCKER_IMAGE_NAME
+      env: 
+        DOCKER_IMAGE_NAME: sunjingyun/simple-web-demo
+      
+  deploy:
+    if: github.event == 'push'
+    needs: [build]
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        os: [ubuntu-18.04]
+    steps:
+    - name: Deploy to test environment
+      run: |
+        export DOCKER_IMAGE_TAG=$(echo $GITHUB_SHA | cut -c -8)
+        export DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+        echo $DOCKER_IMAGE_NAME is deployed
       env: 
         DOCKER_IMAGE_NAME: sunjingyun/simple-web-demo
