@@ -1,9 +1,7 @@
 name: Deploy to Production
 
 on:
-  deployment:
-   branches:
-   - master
+  deployment_status
 
 jobs:
   build:
