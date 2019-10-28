@@ -31,7 +31,7 @@ jobs:
         npm run build
         npm run test
     - name: Docker build and push
-      if: github.github.event == 'push'
+      if: github.event_name == 'push'
       run: |
         export DOCKER_IMAGE_TAG=$(echo $GITHUB_SHA | cut -c -8)
         export DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
@@ -40,16 +40,8 @@ jobs:
         docker push $DOCKER_IMAGE_NAME
       env: 
         DOCKER_IMAGE_NAME: sunjingyun/simple-web-demo
-      
-  deploy:
-    if: github.github.event == 'push'
-    needs: [build]
-    runs-on: ubuntu-18.04
-    strategy:
-      matrix:
-        os: [ubuntu-18.04]
-    steps:
     - name: Deploy to test environment
+      if: github.event_name == 'push'
       run: |
         export DOCKER_IMAGE_TAG=$(echo $GITHUB_SHA | cut -c -8)
         export DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
