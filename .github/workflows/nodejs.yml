@@ -46,7 +46,7 @@ jobs:
         export DOCKER_IMAGE_TAG=$(echo $GITHUB_SHA | cut -c -8)
         export DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
 
-        sed -i 's|__IMAGE_CHANGE__|$DOCKER_IMAGE_NAME|g'
+        sed -i 's|__IMAGE_CHANGE__|$DOCKER_IMAGE_NAME|g' charts/values.yaml
 
         cat charts/values.yaml
       env:
