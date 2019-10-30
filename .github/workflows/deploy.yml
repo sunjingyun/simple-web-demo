@@ -11,10 +11,23 @@ jobs:
       matrix:
         os: [ubuntu-18.04]
     steps:
-    - name: Deploy to production environment
+    - name: Update charts/values.yaml
+      if: github.event_name == 'push'
       run: |
         export DOCKER_IMAGE_TAG=$(echo $GITHUB_SHA | cut -c -8)
         export DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
-        echo $DOCKER_IMAGE_NAME is deployed
-      env: 
+
+        sed -i "s|__IMAGE_CHANGE__|$DOCKER_IMAGE_NAME|g" charts/values.yaml
+      env:
         DOCKER_IMAGE_NAME: sunjingyun/simple-web-demo
+    - name: 'Deploy'
+      if: github.event_name == 'push'
+      uses: 'deliverybot/helm@v1'
+      with:
+        release: 'simple-web-demo'
+        namespace: 'production'
+        chart: 'charts'
+        values: charts/values-production.yaml
+        token: '${{ github.token }}'
+      env:
+        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG_PRODUCTION }}'

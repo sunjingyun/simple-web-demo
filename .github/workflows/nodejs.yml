@@ -40,25 +40,3 @@ jobs:
         docker push $DOCKER_IMAGE_NAME
       env:
         DOCKER_IMAGE_NAME: sunjingyun/simple-web-demo
-    - name: Update charts/values.yaml
-      if: github.event_name == 'push'
-      run: |
-        export DOCKER_IMAGE_TAG=$(echo $GITHUB_SHA | cut -c -8)
-        export DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
-
-        sed -i "s|__IMAGE_CHANGE__|$DOCKER_IMAGE_NAME|g" charts/values.yaml
-
-        cat charts/values.yaml
-      env:
-        DOCKER_IMAGE_NAME: sunjingyun/simple-web-demo
-    - name: 'Deploy'
-      if: github.event_name == 'push'
-      uses: 'deliverybot/helm@v1'
-      with:
-        release: 'simple-web-demo'
-        namespace: 'development'
-        chart: 'charts'
-        values: charts/values.yaml
-        token: '${{ github.token }}'
-      env:
-        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG_DEVELOPMENT }}'
