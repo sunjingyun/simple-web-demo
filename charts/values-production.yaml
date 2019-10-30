@@ -6,7 +6,5 @@ service:
 namespace: production
 replicaCount: 1
 
-image: __IMAGE_CHANGE__
-
 env:
   NODE_ENV: production
