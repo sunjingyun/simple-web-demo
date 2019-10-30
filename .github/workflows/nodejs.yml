@@ -2,7 +2,7 @@ name: Node CI/CD
 
 on:
   pull_request:
-    branches: 
+    branches:
     - master
   push:
     branches:
@@ -22,7 +22,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-        
+
     - name: Install node_modules
       run:
         npm install
@@ -38,7 +38,7 @@ jobs:
         docker build -f Dockerfile -t $DOCKER_IMAGE_NAME .
         docker login -u ${{ secrets.DOCKER_ACCOUNT }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker push $DOCKER_IMAGE_NAME
-      env: 
+      env:
         DOCKER_IMAGE_NAME: sunjingyun/simple-web-demo
     - name: Deploy to test environment
       if: github.event_name == 'push'
@@ -46,5 +46,17 @@ jobs:
         export DOCKER_IMAGE_TAG=$(echo $GITHUB_SHA | cut -c -8)
         export DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
         echo $DOCKER_IMAGE_NAME is deployed
-      env: 
+      env:
         DOCKER_IMAGE_NAME: sunjingyun/simple-web-demo
+
+    - name: 'Deploy'
+      uses: 'deliverybot/helm@v1'
+      with:
+        release: 'simple-web-demo'
+        namespace: 'development'
+        chart: 'charts'
+        values: charts/values.yaml
+        token: '${{ github.token }}'
+
+      env:
+        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG_DEVELOPMENT }}'

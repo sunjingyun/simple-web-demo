@@ -1,0 +1,12 @@
+name: simple-web-demo
+service:
+  type: ClusterIP
+  port: 8080
+
+namespace: test
+replicaCount: 1
+
+image: __IMAGE_CHANGE__
+
+env:
+  NODE_ENV: test
