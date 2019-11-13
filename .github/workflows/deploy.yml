@@ -1,8 +1,11 @@
 name: Deploy to Production
 
 on:
-  release:
-    types: [published]
+#   release:
+#     types: [published]
+  push:
+    branches:
+    - master
 
 jobs:
   build:
@@ -15,6 +18,8 @@ jobs:
       run: |
         export DOCKER_IMAGE_TAG=$(echo $GITHUB_SHA | cut -c -8)
         export DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+
+        ls
 
         sed -i "s|__IMAGE_CHANGE__|$DOCKER_IMAGE_NAME|g" charts/values.yaml
       env:
