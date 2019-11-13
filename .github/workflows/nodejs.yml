@@ -53,7 +53,6 @@ jobs:
         release: 'simple-web-demo'
         namespace: 'test'
         chart: 'charts'
-        values: charts/values.yaml
         token: '${{ github.token }}'
       env:
         KUBECONFIG_FILE: '${{ secrets.KUBECONFIG_TEST }}'
