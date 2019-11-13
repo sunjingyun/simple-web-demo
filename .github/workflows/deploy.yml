@@ -1,11 +1,8 @@
 name: Deploy to Production
 
 on:
-#   release:
-#     types: [published]
-  push:
-    branches:
-    - master
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -14,12 +11,11 @@ jobs:
       matrix:
         os: [ubuntu-18.04]
     steps:
+    - uses: actions/checkout@v1
     - name: Update charts/values.yaml
       run: |
         export DOCKER_IMAGE_TAG=$(echo $GITHUB_SHA | cut -c -8)
         export DOCKER_IMAGE_NAME=$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
-
-        ls
 
         sed -i "s|__IMAGE_CHANGE__|$DOCKER_IMAGE_NAME|g" charts/values.yaml
       env:
@@ -33,4 +29,4 @@ jobs:
         values: charts/values-production.yaml
         token: '${{ github.token }}'
       env:
-        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG_TEST }}'
+        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG_PRODUCTION }}'
