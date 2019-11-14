@@ -48,7 +48,7 @@ jobs:
       env:
         DOCKER_IMAGE_NAME: sunjingyun/simple-web-demo
     - name: 'Deploy to test environment'
-      uses: 'deliverybot/helm@v1.2.0'
+      uses: 'deliverybot/helm@master'
       with:
         release: 'simple-web-demo'
         namespace: 'test'
@@ -58,4 +58,4 @@ jobs:
           namespace: 'test'
           NODE_ENV: 'test'
       env:
-        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG_TEST }}'
+        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
