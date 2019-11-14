@@ -31,5 +31,6 @@ jobs:
         values: |
           namespace: 'production'
           NODE_ENV: 'production'
+        run: |
       env:
         KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
