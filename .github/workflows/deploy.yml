@@ -20,13 +20,16 @@ jobs:
         sed -i "s|__IMAGE_CHANGE__|$DOCKER_IMAGE_NAME|g" charts/values.yaml
       env:
         DOCKER_IMAGE_NAME: sunjingyun/simple-web-demo
-    - name: 'Deploy'
-      uses: 'deliverybot/helm@v1'
+    - name: 'Deploy to test production'
+      uses: 'deliverybot/helm@v1.2.0'
       with:
         release: 'simple-web-demo'
         namespace: 'production'
         chart: 'charts'
         values: charts/values-production.yaml
         token: '${{ github.token }}'
+        values: |
+          namespace: 'production'
+          NODE_ENV: 'production'
       env:
         KUBECONFIG_FILE: '${{ secrets.KUBECONFIG_PRODUCTION }}'

@@ -36,7 +36,7 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.servicePort }}
               protocol: TCP
           envFrom:
             - configMapRef:
@@ -44,11 +44,11 @@ spec:
           livenessProbe:
             httpGet:
               path: /ping
-              port: {{ .Values.service.port }}
+              port: {{ .Values.servicePort }}
           readinessProbe:
             httpGet:
               path: /ping
-              port: {{ .Values.service.port }}
+              port: {{ .Values.servicePort }}
       imagePullSecrets:
         - name: regcred
 
@@ -65,9 +65,9 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   namespace: {{.Values.namespace}}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.serviceType }}
   ports:
-    - port: {{ .Values.service.port }}
+    - port: {{ .Values.servicePort }}
       targetPort: http
       protocol: TCP
       name: http
